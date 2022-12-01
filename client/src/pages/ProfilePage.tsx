@@ -34,8 +34,8 @@ const ProfilePage: FC = () => {
   useEffect(() => {
     if (error) throw error;
     if (!loggedIn) navigate('/login');
-    makeRequest({});
-  }, [error, makeRequest, loggedIn, navigate]);
+    if (!user || user._id !== userId) makeRequest({});
+  }, [error, makeRequest, loggedIn, navigate, user, userId]);
 
   if (!user) return null;
 
