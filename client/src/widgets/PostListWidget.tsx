@@ -1,13 +1,12 @@
 import React, { useEffect, useCallback, FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { MoonLoader } from 'react-spinners';
-import { Box } from '@mui/material';
 import PostWidget from 'widgets/PostWidget';
 import { StateType } from 'stores/store';
 import { Post } from 'interfaces';
 import useHttp, { HandleFn } from 'hooks/useHttp';
 import { postActions } from 'stores/post.slice';
 import WidgetWrapper from 'components/WidgetWrapper';
+import LoadingSpinner from 'components/LoadingSpinner';
 
 type PostListProps = {
   userId?: string;
@@ -46,22 +45,16 @@ const PostListWidget: FC<PostListProps> = React.memo<PostListProps>(
     const loading = loadingAll || loadingProfile;
 
     useEffect(() => {
-      if (isProfile) getUserPosts({});
-      else getPosts({});
-    }, [getUserPosts, getPosts, isProfile]);
+      if (isProfile) {
+        getUserPosts({});
+      } else getPosts({});
+    }, [getUserPosts, getPosts, isProfile, userId]);
 
     return (
       <>
         {loading ? (
           <WidgetWrapper sx={{ '&:not(:first-of-type)': { m: '2rem 0' } }}>
-            <Box
-              display='flex'
-              justifyContent='center'
-              alignItems='center'
-              p='2rem 0'
-            >
-              <MoonLoader />
-            </Box>
+            <LoadingSpinner />
           </WidgetWrapper>
         ) : (
           posts.map(post => <PostWidget key={post._id} post={post} />)

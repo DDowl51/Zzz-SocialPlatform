@@ -5,13 +5,19 @@ import {
   LocationOnOutlined,
   WorkOutlineOutlined,
 } from '@mui/icons-material';
-import { Box, Typography, Divider, useTheme, Skeleton } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Divider,
+  useTheme,
+  Skeleton,
+  Avatar,
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import FlexBetween from 'components/FlexBetween';
 import WidgetWrapper from 'components/WidgetWrapper';
 
 import { User } from 'interfaces/index';
-import UserImage from 'components/UserImage';
 
 type UserWidgetProps = PropsWithChildren<{
   user: User;
@@ -32,10 +38,18 @@ const UserWidget: FC<UserWidgetProps> = ({ user, loading = false }) => {
       <FlexBetween gap='0.5rem' pb='1.1rem'>
         <FlexBetween gap='1rem'>
           {!loading ? (
-            <UserImage image={user.picturePath} />
+            <Avatar
+              src={`/assets/${user.picturePath}`}
+              alt={user.name}
+              sx={{ width: 55, height: 55 }}
+            />
           ) : (
             <Skeleton variant='circular'>
-              <UserImage image={user.picturePath} />
+              <Avatar
+                src={`/assets/${user.picturePath}`}
+                alt={user.name}
+                sx={{ width: 55, height: 55 }}
+              />
             </Skeleton>
           )}
           <Box>

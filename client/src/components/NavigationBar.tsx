@@ -33,7 +33,7 @@ const NavigationBar = () => {
     return (
       <Box
         width='100%'
-        bgcolor={`rgba(${theme.palette.background.paper}, 0.95)`}
+        bgcolor={`rgba(${theme.palette.background.paper}, 0.99)`}
         sx={{ backdropFilter: 'blur(6px)' }}
         p='1rem 6%'
         textAlign='center'
@@ -48,7 +48,7 @@ const NavigationBar = () => {
   return (
     <FlexBetween
       padding='1rem 6%'
-      bgcolor={`rgba(${alt}, 0.95)`}
+      bgcolor={`rgba(${alt}, 0.99)`}
       position='fixed'
       width='100%'
       zIndex='1000'

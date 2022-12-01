@@ -13,12 +13,12 @@ import {
   Chip,
   Skeleton,
   useTheme,
+  Avatar,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import FlexBetween from './FlexBetween';
-import UserImage from './UserImage';
 import { StateType } from 'stores/store';
 import { User, UserType } from 'interfaces';
 import { authActions } from 'stores/auth.slice';
@@ -27,9 +27,10 @@ import { friendActions } from 'stores/friend.slice';
 
 type FriendProps = PropsWithChildren<{
   friendId: string;
+  subtitle?: string;
 }>;
 
-const Friend: FC<FriendProps> = React.memo(({ friendId }) => {
+const Friend: FC<FriendProps> = React.memo(({ friendId, subtitle }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector<StateType, UserType>(state => state.auth.user);
@@ -96,10 +97,14 @@ const Friend: FC<FriendProps> = React.memo(({ friendId }) => {
     <FlexBetween>
       <FlexBetween gap='1rem'>
         {friendUser ? (
-          <UserImage image={friendUser.picturePath} size='55px' />
+          <Avatar
+            src={`/assets/${friendUser.picturePath}`}
+            alt={friendUser.name}
+            sx={{ width: 55, height: 55 }}
+          />
         ) : (
           <Skeleton variant='circular'>
-            <UserImage image='' size='55px' />
+            <Avatar src='' alt='' sx={{ width: 55, height: 55 }} />
           </Skeleton>
         )}
 
@@ -130,7 +135,7 @@ const Friend: FC<FriendProps> = React.memo(({ friendId }) => {
           </Box>
           {friendUser ? (
             <Typography color={medium} fontSize='0.75rem'>
-              {friendUser.location}
+              {subtitle || friendUser.location}
             </Typography>
           ) : (
             <Skeleton width={150} />

@@ -39,7 +39,8 @@ const storage = multer.diskStorage({
     cb(null, 'public/assets');
   },
   filename: (req, file, cb) => {
-    cb(null, file.originalname);
+    // 解决中文乱码
+    cb(null, Buffer.from(file.originalname, 'latin1').toString());
   },
 });
 const upload = multer({ storage });

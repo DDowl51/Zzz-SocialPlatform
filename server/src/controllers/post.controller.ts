@@ -12,7 +12,7 @@ export const getAllPosts = catchAsync(async (req, res, next) => {
   const queryString = req.query as QueryObject;
 
   const postQuery = new ApiFeature(
-    Post.find().populate('user', '-password'),
+    Post.find().populate('user', '-password').populate('comments'),
     queryString
   )
     .filter()
@@ -32,7 +32,7 @@ export const getUserPosts = catchAsync(async (req, res, next) => {
   const queryString = req.query as QueryObject;
 
   const postQuery = new ApiFeature(
-    Post.find({ user: id }).populate('user', '-password'),
+    Post.find({ user: id }).populate('user', '-password').populate('comments'),
     queryString
   )
     .filter()

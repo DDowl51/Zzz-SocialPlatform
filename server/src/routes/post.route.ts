@@ -18,7 +18,7 @@ router.route('/').get(getAllPosts);
 router.patch('/:postId/like', protect, likePost);
 
 router
-  .route('/:postId/comment')
+  .route('/:postId/comments')
   .get(getPostComments)
   .post(protect, createComment);
 

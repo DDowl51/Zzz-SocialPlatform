@@ -17,10 +17,10 @@ import {
   IconButton,
   Tooltip,
   useTheme,
+  Avatar,
   useMediaQuery,
 } from '@mui/material';
 import FlexBetween from 'components/FlexBetween';
-import UserImage from 'components/UserImage';
 import Image from 'components/Image';
 
 import WidgetWrapper from 'components/WidgetWrapper';
@@ -81,7 +81,11 @@ const MyPostWidget = () => {
   return (
     <WidgetWrapper>
       <FlexBetween gap='1.5rem'>
-        <UserImage image={user.picturePath} />
+        <Avatar
+          src={`/assets/${user.picturePath}`}
+          alt={user.name}
+          sx={{ width: 55, height: 55 }}
+        />
         <InputBase
           placeholder="What's on your mind..."
           onChange={e => setPost(e.target.value)}

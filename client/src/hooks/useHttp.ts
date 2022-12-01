@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react';
-import axios, { AxiosError } from 'axios';
+import { useCallback, useMemo, useState, useEffect } from 'react';
+import axios, { AxiosError, AxiosResponse, Canceler } from 'axios';
 import { UserType } from 'interfaces/index';
 
 type MethodType = 'get' | 'post' | 'patch' | 'delete' | 'options';
@@ -25,14 +25,24 @@ function useHttp<ResType>(
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<AxiosError<ErrorType> | null>(null);
 
+  const controller = useMemo(() => new AbortController(), []);
+
+  const request = useCallback(
+    (payload: PayloadType) => {
+      return axios[method](url, payload.data, {
+        headers: { authorization: `Bearer ${payload.token}` },
+        signal: controller.signal,
+      });
+    },
+    [method, url, controller]
+  );
+
   const makeRequest = useCallback(
     async (payload: PayloadType) => {
       try {
         setLoading(true);
-        const response = await axios[method](url, payload.data, {
-          headers: { authorization: `Bearer ${payload.token}` },
-        });
 
+        const response = await request(payload);
         handleData(response.data);
       } catch (error) {
         setError(error as AxiosError<ErrorType>);
@@ -40,10 +50,10 @@ function useHttp<ResType>(
         setLoading(false);
       }
     },
-    [handleData, method, url]
+    [handleData, request]
   );
 
-  return { loading, error, makeRequest };
+  return { loading, error, makeRequest, controller };
 }
 
 export default useHttp;

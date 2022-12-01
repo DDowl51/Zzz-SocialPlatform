@@ -8,8 +8,8 @@ export interface User {
   friends: string[]; // UserId[]
   profileVisitor: string[]; // UserId[]
   impressions: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Comment {
@@ -17,6 +17,8 @@ export interface Comment {
   user: User;
   post: Post;
   content: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Post {
@@ -28,6 +30,8 @@ export interface Post {
   likesCount: number;
   comments: Comment[];
   commentsCount: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type UserType = User | undefined;

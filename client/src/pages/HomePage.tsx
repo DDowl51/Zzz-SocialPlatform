@@ -15,12 +15,14 @@ const HomePage: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector<StateType, UserType>(state => state.auth.user);
+  const userData = useSelector<StateType, UserType>(state => state.user.user);
   const isNonMobileScreens = useMediaQuery('(min-width: 1000px)');
 
   useEffect(() => {
     if (!user) navigate('/');
-    dispatch(userActions.setUser({ user }));
-  }, [user, navigate, dispatch]);
+    // Clear user store each time to HomePage
+    if (!userData) dispatch(userActions.setUser({ user: undefined }));
+  }, [user, navigate, dispatch, userData]);
 
   if (!user) return null;
 
@@ -32,7 +34,10 @@ const HomePage: FC = () => {
       gap='0.5rem'
       justifyContent='space-between'
     >
-      <Box flexBasis={isNonMobileScreens ? '26%' : undefined}>
+      <Box
+        flexBasis={isNonMobileScreens ? '26%' : undefined}
+        // position={isNonMobileScreens ? 'fixed' : 'inherit'}
+      >
         <UserWidget user={user} />
       </Box>
       <Box

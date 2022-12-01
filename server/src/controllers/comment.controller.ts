@@ -21,6 +21,7 @@ export const createComment = catchAsync(
     if (!post) return next(new AppError('Post not found.', 404));
 
     const newComment = new Comment({
+      post: postId,
       user: userId,
       content,
     });
@@ -28,7 +29,7 @@ export const createComment = catchAsync(
     post.comments.push(newComment._id);
     await newComment.save();
 
-    const savedPost = await (await post.populate('comments')).save();
+    const savedPost = await (await post.populate('user', '-password')).save();
 
     res.status(201).json(savedPost);
   }
@@ -37,11 +38,9 @@ export const createComment = catchAsync(
 export const getPostComments = catchAsync(async (req, res, next) => {
   const { postId } = req.params;
 
-  const post = await Post.findById(postId).populate('comments');
-
-  if (!post) return next(new AppError('Post not found.', 404));
-
-  const comments = post.comments;
+  const comments = await Comment.find({ post: postId })
+    .populate('user', 'picturePath _id location occupation name email')
+    .sort('-createdAt');
 
   res.json(comments);
 });

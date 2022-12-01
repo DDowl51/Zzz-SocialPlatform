@@ -5,22 +5,16 @@ import {
   FavoriteOutlined,
   ShareOutlined,
 } from '@mui/icons-material';
-import {
-  Box,
-  Divider,
-  IconButton,
-  Tooltip,
-  Typography,
-  useTheme,
-} from '@mui/material';
+import { IconButton, Tooltip, Typography, useTheme } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import FlexBetween from '../components/FlexBetween';
 import WidgetWrapper from '../components/WidgetWrapper';
 import Friend from '../components/Friend';
-import { Post } from 'interfaces';
+import { Post, UserType } from 'interfaces';
 import { StateType } from 'stores/store';
 import useHttp, { HandleFn } from 'hooks/useHttp';
 import { postActions } from 'stores/post.slice';
+import CommentComponent from 'components/CommentComponent';
 
 type PostProp = {
   post: Post;
@@ -30,9 +24,8 @@ const PostWidget: FC<PostProp> = ({ post }) => {
   const [isComment, setIsComment] = useState(false);
   const dispatch = useDispatch();
   const token = useSelector<StateType, string>(state => state.auth.token);
-  const loggedInUserId = useSelector<StateType, string>(
-    state => (state.auth.user && state.auth.user._id) || ''
-  );
+  const user = useSelector<StateType, UserType>(state => state.auth.user);
+  const loggedInUserId = user?._id || '';
 
   const isLiked = Boolean(post.likes[loggedInUserId]);
 
@@ -100,19 +93,7 @@ const PostWidget: FC<PostProp> = ({ post }) => {
         </Tooltip>
       </FlexBetween>
 
-      {isComment && (
-        <Box mt='0.5rem'>
-          {post.comments.map(comment => (
-            <Box key={comment._id}>
-              <Divider />
-              <Typography sx={{ color: main, m: '0.5rem 0', pl: '1rem' }}>
-                {comment.content}
-              </Typography>
-            </Box>
-          ))}
-          <Divider />
-        </Box>
-      )}
+      {isComment && <CommentComponent from={post} />}
     </WidgetWrapper>
   );
 };
