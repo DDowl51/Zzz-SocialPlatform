@@ -23,5 +23,7 @@ export const protect: RequestHandler = catchAsync(async (req, res, next) => {
     );
 
   req.body.userId = jwtPayload.userId;
+  req.params.userIdFromToken = jwtPayload.userId;
+
   next();
 });

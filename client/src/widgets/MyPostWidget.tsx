@@ -1,8 +1,6 @@
 import { useCallback, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  EditOutlined,
-  DeleteOutlined,
   AttachFileOutlined,
   GifBoxOutlined,
   ImageOutlined,
@@ -28,6 +26,7 @@ import { StateType } from 'stores/store';
 import { UserType } from 'interfaces/index';
 import useHttp, { HandleFn } from 'hooks/useHttp';
 import { postActions } from 'stores/post.slice';
+import UserImage from 'components/UserImage';
 
 const MyPostWidget = () => {
   const dispatch = useDispatch();
@@ -81,11 +80,7 @@ const MyPostWidget = () => {
   return (
     <WidgetWrapper>
       <FlexBetween gap='1.5rem'>
-        <Avatar
-          src={`/assets/${user.picturePath}`}
-          alt={user.name}
-          sx={{ width: 55, height: 55 }}
-        />
+        <UserImage user={user} size='55px' />
         <InputBase
           placeholder="What's on your mind..."
           onChange={e => setPost(e.target.value)}

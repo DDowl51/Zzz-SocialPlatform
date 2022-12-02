@@ -1,19 +1,16 @@
 import React, { PropsWithChildren, FC } from 'react';
-import { Box } from '@mui/material';
+import { Avatar } from '@mui/material';
+import { User } from 'interfaces';
 
-type UserImageProps = PropsWithChildren<{ image: string; size?: string }>;
+type UserImageProps = PropsWithChildren<{ user: User; size?: string }>;
 
-const UserImage: FC<UserImageProps> = ({ image, size = '60px' }) => {
+const UserImage: FC<UserImageProps> = ({ user, size = '60px' }) => {
   return (
-    <Box width={size} height={size}>
-      <img
-        style={{ objectFit: 'cover', borderRadius: '50%' }}
-        width={size}
-        height={size}
-        alt='user'
-        src={`/assets/${image}`}
-      />
-    </Box>
+    <Avatar
+      src={`/assets/${user.picturePath}`}
+      alt={user.name}
+      sx={{ width: size, height: size }}
+    />
   );
 };
 

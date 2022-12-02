@@ -82,7 +82,6 @@ export const likePost = catchAsync(async (req: ILoggedRequest, res, next) => {
   const post = await Post.findById(postId).populate('user', '-password');
 
   if (!post) return next(new AppError('No post found!', 404));
-  console.log(post.user);
 
   const user = await User.findById(post.user._id);
 

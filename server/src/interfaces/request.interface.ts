@@ -14,6 +14,7 @@ interface ILoginBody extends ILoggedBody {
   password?: string;
   occupation?: string;
   location?: string;
+  picturePath?: string;
 }
 
 export interface ILoginRequest extends Request {

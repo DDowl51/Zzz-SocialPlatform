@@ -27,7 +27,7 @@ const PostWidget: FC<PostProp> = ({ post }) => {
   const user = useSelector<StateType, UserType>(state => state.auth.user);
   const loggedInUserId = user?._id || '';
 
-  const isLiked = Boolean(post.likes[loggedInUserId]);
+  const [isLiked, setIsLiked] = useState(Boolean(post.likes[loggedInUserId]));
 
   const { palette } = useTheme();
   const main = palette.neutral.main;
@@ -47,6 +47,7 @@ const PostWidget: FC<PostProp> = ({ post }) => {
   );
 
   const handleLike = () => {
+    setIsLiked(prev => !prev);
     makeRequest({ token });
   };
 

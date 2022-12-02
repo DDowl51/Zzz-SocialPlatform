@@ -14,7 +14,7 @@ import postRoutes from './routes/post.route';
 import commentRoutes from './routes/comment.route';
 import mongoose from 'mongoose';
 import { errorHandler } from './controllers/error.controller';
-import { register } from './controllers/user.controller';
+import { register, updateProfile } from './controllers/user.controller';
 import { createPost } from './controllers/post.controller';
 import { protect } from './middlewares/auth.middle';
 
@@ -29,7 +29,7 @@ app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
 app.use(morgan('common'));
 app.use(bodyParser.json({ limit: '30mb' }));
-app.use(bodyParser.urlencoded({ limit: '30mb', extended: true }));
+app.use(bodyParser.urlencoded({ limit: '30mb', extended: false }));
 app.use(cors());
 app.use('/assets', express.static(path.join(__dirname, '../public/assets')));
 
@@ -47,7 +47,13 @@ const upload = multer({ storage });
 
 // Routes with files
 app.post('/api/auth/register', upload.single('picture'), register);
-app.post('/api/posts', protect, upload.single('picture'), createPost);
+app.post('/api/posts', upload.single('picture'), protect, createPost);
+app.patch(
+  '/api/users/update',
+  protect,
+  upload.single('picture'),
+  updateProfile
+);
 
 // Routes
 app.use('/api/auth', authRoutes);

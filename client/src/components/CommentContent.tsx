@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Box, Card, Typography, useTheme } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import { Comment } from 'interfaces';
 import Friend from './Friend';
 

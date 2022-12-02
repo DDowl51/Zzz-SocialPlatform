@@ -1,5 +1,5 @@
 import React, { FC, useState, useCallback, useEffect } from 'react';
-import { Box, Divider, InputBase, Avatar, useTheme } from '@mui/material';
+import { Box, Divider, InputBase, useTheme } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from 'react-redux';
 import FlexBetween from './FlexBetween';
@@ -10,6 +10,7 @@ import { StateType } from 'stores/store';
 import LoadingSpinner from './LoadingSpinner';
 import CommentContent from './CommentContent';
 import { Stack } from '@mui/system';
+import UserImage from './UserImage';
 
 type CommentProp = {
   from: Post;
@@ -82,11 +83,7 @@ const CommentComponent: FC<CommentProp> = ({ from: post }) => {
       {/* Comment posting place */}
       {user && (
         <FlexBetween p='1rem' gap='1.5rem'>
-          <Avatar
-            src={`/assets/${user.picturePath}`}
-            alt={user.name}
-            sx={{ width: 40, height: 40 }}
-          />
+          <UserImage user={user} size='40px' />
           <InputBase
             placeholder="What's on your mind..."
             onChange={e => setCommentContent(e.target.value)}

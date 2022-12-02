@@ -13,7 +13,6 @@ import {
   Chip,
   Skeleton,
   useTheme,
-  Avatar,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -24,6 +23,7 @@ import { User, UserType } from 'interfaces';
 import { authActions } from 'stores/auth.slice';
 import useHttp, { HandleFn } from 'hooks/useHttp';
 import { friendActions } from 'stores/friend.slice';
+import UserImage from 'components/UserImage';
 
 type FriendProps = PropsWithChildren<{
   friendId: string;
@@ -97,14 +97,10 @@ const Friend: FC<FriendProps> = React.memo(({ friendId, subtitle }) => {
     <FlexBetween>
       <FlexBetween gap='1rem'>
         {friendUser ? (
-          <Avatar
-            src={`/assets/${friendUser.picturePath}`}
-            alt={friendUser.name}
-            sx={{ width: 55, height: 55 }}
-          />
+          <UserImage user={friendUser} size='55px' />
         ) : (
           <Skeleton variant='circular'>
-            <Avatar src='' alt='' sx={{ width: 55, height: 55 }} />
+            <UserImage user={user!} size='55px' />
           </Skeleton>
         )}
 

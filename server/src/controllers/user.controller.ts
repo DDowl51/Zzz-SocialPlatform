@@ -51,9 +51,11 @@ export const register = catchAsync(async (req, res) => {
 //* Protected
 export const updateProfile = catchAsync(
   async (req: ILoginRequest, res, next) => {
-    const userId = req.body.userId;
+    const userId = req.body.userId || req.params.userIdFromToken;
 
     const user = await User.findById(userId);
+
+    console.log(req.body);
 
     if (!user) return next(new AppError('User not found.', 404));
 
@@ -61,6 +63,7 @@ export const updateProfile = catchAsync(
     user.email = req.body.email || user.email;
     user.occupation = req.body.occupation || user.occupation;
     user.location = req.body.location || user.location;
+    user.picturePath = req.body.picturePath || user.picturePath;
 
     if (req.body.password) {
       user.password = req.body.password;

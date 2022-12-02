@@ -14,7 +14,6 @@ const router = express.Router();
 
 router.route('/').get(protect, getAllUsers);
 // router.post('/register', register);
-router.patch('/update', protect, updateProfile);
 router.route('/:id').get(getUserById);
 router.get('/:id/posts', getUserPosts);
 router.patch('/friends/:friendId', protect, handleFriend);
