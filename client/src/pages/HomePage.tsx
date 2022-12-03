@@ -9,6 +9,7 @@ import MyPostWidget from 'widgets/MyPostWidget';
 import PostListWidget from 'widgets/PostListWidget';
 import AdvertWidget from 'widgets/AdvertWidget';
 import FriendListWidget from 'widgets/FriendListWidget';
+import DebugWidget from 'widgets/DebugWidget';
 import { userActions } from 'stores/user.slice';
 
 const HomePage: FC = () => {
@@ -21,7 +22,7 @@ const HomePage: FC = () => {
   useEffect(() => {
     if (!user) navigate('/');
     // Clear user store each time to HomePage
-    if (!userData) dispatch(userActions.setUser({ user: undefined }));
+    if (userData) dispatch(userActions.setUser({ user: undefined }));
   }, [user, navigate, dispatch, userData]);
 
   if (!user) return null;
@@ -39,6 +40,8 @@ const HomePage: FC = () => {
         // position={isNonMobileScreens ? 'fixed' : 'inherit'}
       >
         <UserWidget user={user} />
+        {/* <Box m='2rem 0' /> */}
+        {/* <DebugWidget /> */}
       </Box>
       <Box
         flexBasis={isNonMobileScreens ? '42%' : undefined}

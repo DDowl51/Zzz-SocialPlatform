@@ -10,6 +10,7 @@ import {
   TextField,
   Avatar,
 } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import * as yup from 'yup';
 import WidgetWrapper from 'components/WidgetWrapper';
 
@@ -130,9 +131,9 @@ const UserEdit: FC<UserEditProps> = ({ onSwitch, user }) => {
         gap='0.5rem'
         pb='1.1rem'
       >
-        <Typography variant='h5' sx={{ justifySelf: 'start' }}>
-          Edit Profile
-        </Typography>
+        <IconButton onClick={onSwitch} sx={{ justifySelf: 'start' }}>
+          <ArrowBackIcon />
+        </IconButton>
         <Button
           aria-label='upload picture'
           component='label'
@@ -155,9 +156,9 @@ const UserEdit: FC<UserEditProps> = ({ onSwitch, user }) => {
             sx={{ width: '65px', height: '65px' }}
           />
         </Button>
-        <IconButton onClick={onSwitch} sx={{ justifySelf: 'end' }}>
-          <ManageAccountsOutlined />
-        </IconButton>
+        <Typography variant='h5' sx={{ justifySelf: 'end' }}>
+          Edit Profile
+        </Typography>
       </Box>
 
       <Divider />

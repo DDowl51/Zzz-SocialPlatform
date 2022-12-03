@@ -14,7 +14,7 @@ import { Post, UserType } from 'interfaces';
 import { StateType } from 'stores/store';
 import useHttp, { HandleFn } from 'hooks/useHttp';
 import { postActions } from 'stores/post.slice';
-import CommentComponent from 'components/CommentComponent';
+import CommentComponent from 'components/Comment/CommentComponent';
 
 type PostProp = {
   post: Post;
@@ -53,7 +53,10 @@ const PostWidget: FC<PostProp> = ({ post }) => {
 
   return (
     <WidgetWrapper sx={{ '&:not(:first-of-type)': { m: '2rem 0' } }}>
-      <Friend friendId={post.user._id} />
+      <Friend
+        friendId={post.user._id}
+        subtitle={new Date(post.user.createdAt).toLocaleString()}
+      />
       <Typography color={main} sx={{ mt: '1rem' }}>
         {post.description}
       </Typography>

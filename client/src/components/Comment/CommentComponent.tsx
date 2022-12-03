@@ -2,15 +2,15 @@ import React, { FC, useState, useCallback, useEffect } from 'react';
 import { Box, Divider, InputBase, useTheme } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from 'react-redux';
-import FlexBetween from './FlexBetween';
+import FlexBetween from '../FlexBetween';
 import { Comment, Post, User } from 'interfaces';
 import useHttp, { HandleFn } from 'hooks/useHttp';
 import { postActions } from 'stores/post.slice';
 import { StateType } from 'stores/store';
-import LoadingSpinner from './LoadingSpinner';
+import LoadingSpinner from '../LoadingSpinner';
 import CommentContent from './CommentContent';
 import { Stack } from '@mui/system';
-import UserImage from './UserImage';
+import UserImage from '../UserImage';
 
 type CommentProp = {
   from: Post;
@@ -56,20 +56,22 @@ const CommentComponent: FC<CommentProp> = ({ from: post }) => {
   useEffect(() => {
     if (error) throw error;
     if (errorComments) throw errorComments;
-    fetchComments({});
+    if (post.commentsCount) {
+      fetchComments({});
+    }
 
     return () => {
       fetchController.abort();
     };
-  }, [error, errorComments, fetchComments, fetchController]);
+  }, [error, errorComments, fetchComments, fetchController, post]);
 
   return (
     <Box mt='0.5rem'>
       <Stack
         spacing={2}
-        divider={<Divider />}
-        maxHeight='30rem'
-        sx={{ overflowY: 'scroll' }}
+        // 这样可能更好看?
+        // maxHeight='30rem'
+        // sx={{ overflowY: 'scroll' }}
       >
         {loadingComments ? (
           <LoadingSpinner size='30px' />
@@ -79,7 +81,6 @@ const CommentComponent: FC<CommentProp> = ({ from: post }) => {
           ))
         )}
       </Stack>
-      <Divider />
       {/* Comment posting place */}
       {user && (
         <FlexBetween p='1rem' gap='1.5rem'>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   IconButton,
@@ -7,13 +7,15 @@ import {
   Tooltip,
   useTheme,
   useMediaQuery,
+  Fade,
+  Slide,
 } from '@mui/material';
 import { Search, Menu, Close } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import FlexBetween from './FlexBetween';
 import { useSelector } from 'react-redux';
 import { StateType } from 'stores/store';
-import { NavItem } from './NavItem';
+import NavItem from './NavItem';
 
 const NavigationBar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -91,32 +93,32 @@ const NavigationBar = () => {
       {isNonMobileScreens ? (
         <NavItem />
       ) : (
-        <IconButton onClick={() => setIsMobileMenuToggled(prev => !prev)}>
+        <IconButton
+          onClick={() => setIsMobileMenuToggled(prev => !prev)}
+          sx={{ zIndex: 1500 }}
+        >
           <Menu />
         </IconButton>
       )}
 
       {/* Mobile Nav */}
-      {!isNonMobileScreens && isMobileMenuToggled && (
-        <Box
-          position='fixed'
-          right='0'
-          bottom='0'
-          height='100%'
-          zIndex='100'
-          maxWidth='500px'
-          minWidth='300px'
-          bgcolor={background}
-        >
-          {/* Close Button */}
-          <Box display='flex' justifyContent='flex-end' p='1rem'>
-            <IconButton onClick={() => setIsMobileMenuToggled(prev => !prev)}>
-              <Close />
-            </IconButton>
+      {!isNonMobileScreens && (
+        <Slide direction='left' in={isMobileMenuToggled}>
+          <Box
+            position='fixed'
+            right='0'
+            top='0'
+            pt='5rem'
+            height='100vh'
+            zIndex='1000'
+            maxWidth='25rem'
+            minWidth='15rem'
+            bgcolor={background}
+          >
+            {/* Menu */}
+            <NavItem isMobile />
           </Box>
-          {/* Menu */}
-          <NavItem isMobile />
-        </Box>
+        </Slide>
       )}
     </FlexBetween>
   );

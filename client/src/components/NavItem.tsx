@@ -22,13 +22,12 @@ import FlexBetween from 'components/FlexBetween';
 import { StateType } from 'stores/store';
 import { authActions } from 'stores/auth.slice';
 import { UserType } from 'interfaces/index';
-import { useNavigate } from 'react-router-dom';
 
 interface NavItemProps {
   isMobile?: boolean;
 }
 
-export const NavItem: FC<PropsWithChildren<NavItemProps>> = ({ isMobile }) => {
+const NavItem: FC<PropsWithChildren<NavItemProps>> = ({ isMobile }) => {
   const dispatch = useDispatch();
   const user = useSelector<StateType, UserType | undefined>(
     state => state.auth.user
@@ -97,3 +96,5 @@ export const NavItem: FC<PropsWithChildren<NavItemProps>> = ({ isMobile }) => {
     </FlexBetween>
   );
 };
+
+export default NavItem;
