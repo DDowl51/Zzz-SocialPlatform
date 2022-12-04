@@ -56,8 +56,6 @@ const LoginForm: FC = () => {
     values: LoginType,
     onSubmitProps: FormikHelpers<LoginType>
   ) => {
-    console.log(values);
-
     makeRequest({ data: { email: values.email, password: values.password } });
   };
 

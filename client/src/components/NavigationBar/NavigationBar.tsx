@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { Search, Menu, Close } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import FlexBetween from './FlexBetween';
+import FlexBetween from '../FlexBetween';
 import { useSelector } from 'react-redux';
 import { StateType } from 'stores/store';
 import NavItem from './NavItem';
@@ -51,7 +51,7 @@ const NavigationBar = () => {
     <FlexBetween
       padding='1rem 6%'
       bgcolor={`rgba(${alt}, 0.99)`}
-      position='fixed'
+      position={!isNonMobileScreens ? 'fixed' : 'initial'}
       width='100%'
       zIndex='1000'
       sx={{ backdropFilter: 'blur(6px)' }}

@@ -56,8 +56,9 @@ export const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
     });
   } else if ((error as InternalError).name) {
     // Class validation workaround
-    console.log(error);
-    return mongooseErrorHandler[error.name](error, res);
+    // console.log(error);
+    return internalErrorHandler(400, error, res);
+    // return mongooseErrorHandler[error.name](error, res);
   }
 
   res.status(500).json({

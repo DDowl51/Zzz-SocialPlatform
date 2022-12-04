@@ -5,6 +5,7 @@ import {
 } from '../controllers/comment.controller';
 import {
   createPost,
+  deletePost,
   getAllPosts,
   getUserPosts,
   likePost,
@@ -15,6 +16,7 @@ import { protect } from '../middlewares/auth.middle';
 const router = express.Router();
 
 router.route('/').get(getAllPosts);
+router.delete('/:postId', protect, deletePost);
 router.patch('/:postId/like', protect, likePost);
 
 router

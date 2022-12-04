@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useState, useEffect } from 'react';
-import axios, { AxiosError, AxiosResponse, Canceler } from 'axios';
+import { useCallback, useMemo, useState } from 'react';
+import axios, { AxiosError } from 'axios';
 import { UserType } from 'interfaces/index';
 
 type MethodType = 'get' | 'post' | 'patch' | 'delete' | 'options';
@@ -29,6 +29,12 @@ function useHttp<ResType>(
 
   const request = useCallback(
     (payload: PayloadType) => {
+      if (method === 'delete') {
+        return axios.delete(url, {
+          headers: { authorization: `Bearer ${payload.token}` },
+          signal: controller.signal,
+        });
+      }
       return axios[method](url, payload.data, {
         headers: { authorization: `Bearer ${payload.token}` },
         signal: controller.signal,

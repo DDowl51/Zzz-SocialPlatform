@@ -21,6 +21,11 @@ const postSlice = createSlice({
         post._id === action.payload.post._id ? action.payload.post : post
       );
     },
+    deletePost(state, action) {
+      state.posts = state.posts.filter(
+        post => post._id !== action.payload.postId
+      );
+    },
   },
 });
 

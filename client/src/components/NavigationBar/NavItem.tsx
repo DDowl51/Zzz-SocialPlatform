@@ -1,6 +1,7 @@
-import { FC, PropsWithChildren, useEffect } from 'react';
+import { FC, PropsWithChildren } from 'react';
 import {
   IconButton,
+  Button,
   InputBase,
   Typography,
   Select,
@@ -14,6 +15,7 @@ import {
   DarkMode,
   LightMode,
   Notifications,
+  Logout,
   Help,
 } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,6 +24,7 @@ import FlexBetween from 'components/FlexBetween';
 import { StateType } from 'stores/store';
 import { authActions } from 'stores/auth.slice';
 import { UserType } from 'interfaces/index';
+import NavNotification from './NavNotification';
 
 interface NavItemProps {
   isMobile?: boolean;
@@ -34,6 +37,7 @@ const NavItem: FC<PropsWithChildren<NavItemProps>> = ({ isMobile }) => {
   );
 
   const theme = useTheme();
+  const { palette } = theme;
   const neutralLight = theme.palette.neutral.light;
   const dark = theme.palette.neutral.dark;
 
@@ -57,42 +61,19 @@ const NavItem: FC<PropsWithChildren<NavItemProps>> = ({ isMobile }) => {
           <Message sx={{ fontSize: '25px' }} />
         </IconButton>
       </Tooltip>
-      <Tooltip title='Not implemented yet'>
-        <IconButton>
-          <Notifications sx={{ fontSize: '25px' }} />
-        </IconButton>
-      </Tooltip>
+      <NavNotification />
       <Tooltip title='Not implemented yet'>
         <IconButton>
           <Help sx={{ fontSize: '25px' }} />
         </IconButton>
       </Tooltip>
-      <FormControl>
-        <Select
-          value={username}
-          sx={{
-            bgcolor: neutralLight,
-            width: '150px',
-            borderRadius: '0.25rem',
-            p: '0.25rem 1rem',
-            '& .MuiSvgIcon-root': {
-              pr: '0.25rem',
-              width: '3rem',
-            },
-            '& .MuiSelect-select:focus': {
-              bgcolor: neutralLight,
-            },
-          }}
-          input={<InputBase />}
-        >
-          <MenuItem value={username}>
-            <Typography>{username}</Typography>
-          </MenuItem>
-          <MenuItem onClick={() => dispatch(authActions.logout())}>
-            Logout
-          </MenuItem>
-        </Select>
-      </FormControl>
+      <Button
+        sx={{ color: palette.primary.dark }}
+        onClick={() => dispatch(authActions.logout())}
+      >
+        <Typography pr='0.5rem'>{username}</Typography>
+        <Logout sx={{ fontSize: '25px' }} />
+      </Button>
     </FlexBetween>
   );
 };

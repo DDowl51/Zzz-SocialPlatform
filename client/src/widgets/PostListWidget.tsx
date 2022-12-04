@@ -47,7 +47,9 @@ const PostListWidget: FC<PostListProps> = React.memo<PostListProps>(
     useEffect(() => {
       if (isProfile) {
         getUserPosts({});
-      } else getPosts({});
+      } else {
+        getPosts({});
+      }
     }, [getUserPosts, getPosts, isProfile, userId]);
 
     return (

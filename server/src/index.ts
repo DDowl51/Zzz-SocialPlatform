@@ -7,11 +7,13 @@ import cors from 'cors';
 import path from 'path';
 import sourceMapSupport from 'source-map-support';
 import multer from 'multer';
+import { createSession, createChannel } from 'better-sse';
 
-import authRoutes from './routes/auth.route';
-import userRoutes from './routes/user.route';
-import postRoutes from './routes/post.route';
-import commentRoutes from './routes/comment.route';
+import authRouter from './routes/auth.route';
+import userRouter from './routes/user.route';
+import postRouter from './routes/post.route';
+import commentRouter from './routes/comment.route';
+import sseRouter from './routes/sse.route';
 import mongoose from 'mongoose';
 import { errorHandler } from './controllers/error.controller';
 import { register, updateProfile } from './controllers/user.controller';
@@ -56,10 +58,11 @@ app.patch(
 );
 
 // Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/posts', postRoutes);
-app.use('/api/comments', commentRoutes);
+app.use('/api/auth', authRouter);
+app.use('/api/users', userRouter);
+app.use('/api/posts', postRouter);
+app.use('/api/comments', commentRouter);
+app.use('/api/sse', sseRouter);
 
 app.use(errorHandler);
 
