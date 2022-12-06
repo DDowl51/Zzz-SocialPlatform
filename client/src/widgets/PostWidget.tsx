@@ -28,6 +28,7 @@ import CommentComponent from '../components/Comment/CommentComponent';
 import UserImage from 'components/UserImage';
 import { useNavigate } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
+import { getDate } from 'utils/getDate';
 
 type PostProp = {
   post: Post;
@@ -42,7 +43,6 @@ const PostWidget: FC<PostProp> = ({ post }) => {
   const loggedInUserId = user?._id || '';
 
   const [isLiked, setIsLiked] = useState(Boolean(post.likes[loggedInUserId]));
-  const postDate = new Date(post.createdAt).toLocaleString();
   const isAuthor = loggedInUserId === post.user._id;
 
   const { palette } = useTheme();
@@ -89,8 +89,6 @@ const PostWidget: FC<PostProp> = ({ post }) => {
   } = useHttp(`/api/posts/${post._id}`, handleDeletePost, 'delete');
 
   const handleDelete = () => {
-    console.log(token);
-
     deletePostRequest({ token });
   };
 
@@ -133,7 +131,7 @@ const PostWidget: FC<PostProp> = ({ post }) => {
               </Typography>
             </Link>
             <Typography color={palette.neutral.main} fontSize='0.75rem'>
-              {postDate}
+              {getDate(post.createdAt)}
             </Typography>
           </Box>
         </Box>

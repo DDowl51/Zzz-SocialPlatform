@@ -25,7 +25,7 @@ const ProfilePage: FC = () => {
     [dispatch]
   );
 
-  const { loading, error, makeRequest, controller } = useHttp(
+  const { loading, error, makeRequest } = useHttp(
     `/api/users/${userId}`,
     setUserData,
     'get'
@@ -37,11 +37,7 @@ const ProfilePage: FC = () => {
     if (!user || user._id !== userId) {
       makeRequest({});
     }
-
-    return () => {
-      controller.abort();
-    };
-  }, [error, makeRequest, loggedIn, navigate, user, userId, controller]);
+  }, [error, makeRequest, loggedIn, navigate, user, userId]);
 
   if (!user) return null;
 

@@ -13,6 +13,7 @@ import authRouter from './routes/auth.route';
 import userRouter from './routes/user.route';
 import postRouter from './routes/post.route';
 import commentRouter from './routes/comment.route';
+import notificationRouter from './routes/notification.route';
 import sseRouter from './routes/sse.route';
 import mongoose from 'mongoose';
 import { errorHandler } from './controllers/error.controller';
@@ -62,6 +63,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
 app.use('/api/posts', postRouter);
 app.use('/api/comments', commentRouter);
+app.use('/api/notifications', notificationRouter);
 app.use('/api/sse', sseRouter);
 
 app.use(errorHandler);

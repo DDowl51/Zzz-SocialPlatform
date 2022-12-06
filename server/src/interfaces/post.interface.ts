@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { IComment } from './comment.interface';
 
 type ObjectId = mongoose.Types.ObjectId;
 

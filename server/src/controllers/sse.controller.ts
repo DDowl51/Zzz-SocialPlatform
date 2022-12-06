@@ -11,12 +11,12 @@ export const sseConnect = catchAsync(async (req, res) => {
   const userId = req.body.userId || req.params.userIdFromToken;
 
   const session = await createSession(req, res);
-  sessionUserMap.set(userId, session);
-  console.log(session.eventNames());
 
-  if (sessionUserMap.has(userId)) {
-    sessionUserMap.get(userId)?.push('Welcome!!');
-  }
+  // console.log(`${userId} connected`);
+
+  sessionUserMap.set(userId, session);
+
+  session.push('hello');
 });
 
 // After protect
@@ -24,7 +24,10 @@ export const sseClose: RequestHandler = (req, res) => {
   const userId = req.body.userId || req.params.userIdFromToken;
 
   if (sessionUserMap.has(userId)) {
-    sessionUserMap.get(userId)?.push('Bye');
+    console.log(`${userId} closed connection`);
+
     sessionUserMap.delete(userId);
   }
+
+  res.json({ status: 'success' });
 };

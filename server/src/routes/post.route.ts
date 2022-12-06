@@ -11,17 +11,18 @@ import {
   likePost,
 } from '../controllers/post.controller';
 import { protect } from '../middlewares/auth.middle';
+import { notify } from '../middlewares/notification.middle';
 
 // /api/posts
 const router = express.Router();
 
 router.route('/').get(getAllPosts);
 router.delete('/:postId', protect, deletePost);
-router.patch('/:postId/like', protect, likePost);
+router.patch('/:postId/like', protect, notify('like'), likePost);
 
 router
   .route('/:postId/comments')
   .get(getPostComments)
-  .post(protect, createComment);
+  .post(protect, notify('comment'), createComment);
 
 export default router;

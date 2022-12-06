@@ -35,3 +35,13 @@ export interface Post {
 }
 
 export type UserType = User | undefined;
+
+export interface Notification {
+  _id: string;
+  type: 'like' | 'comment';
+  from: User; // Populated by Id
+  targetPost: string; // Post id
+  status: 'read' | 'unread';
+  createdAt: string;
+  updatedAt: string;
+}

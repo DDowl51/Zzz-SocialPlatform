@@ -92,10 +92,6 @@ export const likePost = catchAsync(async (req: ILoggedRequest, res, next) => {
     // Like it
     post.likes.set(userId, true);
     postUser.impressions++;
-
-    // Notify post author if author is online - with sse
-    if (postUser._id.toString() !== likeUser._id.toString())
-      likePostNotification(postUser._id.toString(), likeUser);
   }
 
   if (postUser) await postUser.save();

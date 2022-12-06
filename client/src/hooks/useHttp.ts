@@ -29,8 +29,8 @@ function useHttp<ResType>(
 
   const request = useCallback(
     (payload: PayloadType) => {
-      if (method === 'delete') {
-        return axios.delete(url, {
+      if (['delete', 'get'].includes(method)) {
+        return axios[method](url, {
           headers: { authorization: `Bearer ${payload.token}` },
           signal: controller.signal,
         });

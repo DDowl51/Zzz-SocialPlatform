@@ -44,3 +44,25 @@ export const getPostComments = catchAsync(async (req, res, next) => {
 
   res.json(comments);
 });
+
+export const deleteComment = catchAsync(async (req, res, next) => {
+  const { commentId } = req.params;
+  const userId = req.body.userId || req.params.userIdFromToken;
+
+  const post = await Post.findOne({ comments: commentId });
+  const comment = await Comment.findById(commentId);
+
+  if (!post) return next(new AppError('Post not found', 404));
+  if (!comment) return next(new AppError('Comment not found', 404));
+
+  if (userId !== comment.user.toString()) {
+    return next(new AppError('Not authorized', 401));
+  }
+
+  post.comments = post.comments.filter(c => c.toString() !== commentId);
+  post.commentsCount = post.comments.length;
+  await comment.remove();
+  await post.save();
+
+  res.status(204).json({});
+});

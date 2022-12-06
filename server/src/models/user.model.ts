@@ -49,6 +49,11 @@ const userSchema = new mongoose.Schema<IUser, UserModel, IUserMethods>(
       type: Number,
       default: 0,
     },
+    notification: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: 'Notification',
+      default: [],
+    },
   },
   { timestamps: true }
 );

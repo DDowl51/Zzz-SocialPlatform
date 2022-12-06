@@ -11,6 +11,7 @@ export interface IUser {
   occupation: string;
   profileVisitor: mongoose.Types.ObjectId[];
   impressions: number;
+  notification: mongoose.Types.ObjectId[];
 }
 
 export interface IUserMethods {

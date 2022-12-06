@@ -35,6 +35,10 @@ const CommentComponent: FC<CommentProp> = ({ from: post }) => {
     controller: fetchController,
   } = useHttp(`/api/posts/${post._id}/comments`, fetchCommentsHandler, 'get');
 
+  const deleteCommentHandler = useCallback((commentId: string) => {
+    setComments(prev => prev.filter(c => c._id !== commentId));
+  }, []);
+
   const newCommentHandler = useCallback<HandleFn<Post>>(
     data => {
       dispatch(postActions.setPost({ post: data }));
@@ -59,10 +63,6 @@ const CommentComponent: FC<CommentProp> = ({ from: post }) => {
     if (post.commentsCount) {
       fetchComments({});
     }
-
-    return () => {
-      fetchController.abort();
-    };
   }, [error, errorComments, fetchComments, fetchController, post]);
 
   return (
@@ -77,7 +77,11 @@ const CommentComponent: FC<CommentProp> = ({ from: post }) => {
           <LoadingSpinner size='30px' />
         ) : (
           comments.map(comment => (
-            <CommentContent key={comment._id} comment={comment} />
+            <CommentContent
+              key={comment._id}
+              comment={comment}
+              onDelete={deleteCommentHandler}
+            />
           ))
         )}
       </Stack>
