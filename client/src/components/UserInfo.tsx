@@ -1,11 +1,9 @@
-import { FC, useCallback } from 'react';
+import { FC } from 'react';
 import {
   ManageAccountsOutlined,
   EditOutlined,
   LocationOnOutlined,
   WorkOutlineOutlined,
-  PersonRemoveOutlined,
-  PersonAddOutlined,
 } from '@mui/icons-material';
 import {
   Box,
@@ -20,7 +18,7 @@ import FlexBetween from 'components/FlexBetween';
 import WidgetWrapper from 'components/WidgetWrapper';
 
 import { User } from 'interfaces/index';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { StateType } from 'stores/store';
 import UserImage from 'components/UserImage';
 import FriendAddBadge from './FriendAddBadge';
@@ -33,9 +31,7 @@ type UserInfoProps = {
 
 const UserInfo: FC<UserInfoProps> = ({ onSwitch, user, loading = false }) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const loggedUser = useSelector<StateType, User>(state => state.auth.user!);
-  const isFriend = loggedUser.friends.some(fId => fId === user._id);
 
   const { palette } = useTheme();
   const dark = palette.neutral.dark;

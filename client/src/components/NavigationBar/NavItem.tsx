@@ -25,6 +25,7 @@ import { StateType } from 'stores/store';
 import { authActions } from 'stores/auth.slice';
 import { UserType } from 'interfaces/index';
 import NavNotification from './NavNotification';
+import { useNavigate } from 'react-router-dom';
 
 interface NavItemProps {
   isMobile?: boolean;
@@ -32,13 +33,13 @@ interface NavItemProps {
 
 const NavItem: FC<PropsWithChildren<NavItemProps>> = ({ isMobile }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user = useSelector<StateType, UserType | undefined>(
     state => state.auth.user
   );
 
   const theme = useTheme();
   const { palette } = theme;
-  const neutralLight = theme.palette.neutral.light;
   const dark = theme.palette.neutral.dark;
 
   const username = (user && user.name) || 'Anonymous';
@@ -56,11 +57,9 @@ const NavItem: FC<PropsWithChildren<NavItemProps>> = ({ isMobile }) => {
           <DarkMode sx={{ fontSize: '25px' }} />
         )}
       </IconButton>
-      <Tooltip title='Not implemented yet'>
-        <IconButton>
-          <Message sx={{ fontSize: '25px' }} />
-        </IconButton>
-      </Tooltip>
+      <IconButton onClick={() => navigate('/message')}>
+        <Message sx={{ fontSize: '25px' }} />
+      </IconButton>
       <NavNotification />
       <Tooltip title='Not implemented yet'>
         <IconButton>

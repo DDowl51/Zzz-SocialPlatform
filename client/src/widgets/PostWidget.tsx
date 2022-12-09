@@ -115,21 +115,19 @@ const PostWidget: FC<PostProp> = ({ post }) => {
             }}
           />
           <Box mt='0.2rem'>
-            <Link
+            <Typography
+              variant='body2'
               display='inline'
-              height='auto'
-              href={`/profile/${post.user._id}`}
-              sx={{ textDecoration: 'none', color: palette.neutral.dark }}
+              fontSize='0.9rem'
+              onClick={() => navigate(`/profile/${post.user._id}`)}
+              sx={{
+                color: palette.primary.dark,
+                pt: '0.3rem',
+                '&:hover': { cursor: 'pointer' },
+              }}
             >
-              <Typography
-                variant='body2'
-                display='inline'
-                fontSize='0.9rem'
-                sx={{ color: palette.primary.dark, pt: '0.3rem' }}
-              >
-                {post.user.name}
-              </Typography>
-            </Link>
+              {post.user.name}
+            </Typography>
             <Typography color={palette.neutral.main} fontSize='0.75rem'>
               {getDate(post.createdAt)}
             </Typography>

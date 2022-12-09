@@ -7,12 +7,14 @@ import cors from 'cors';
 import path from 'path';
 import sourceMapSupport from 'source-map-support';
 import multer from 'multer';
-import { createSession, createChannel } from 'better-sse';
+import { Server } from 'socket.io';
+import http from 'http';
 
 import authRouter from './routes/auth.route';
 import userRouter from './routes/user.route';
 import postRouter from './routes/post.route';
 import commentRouter from './routes/comment.route';
+import chatRouter from './routes/chat.route';
 import notificationRouter from './routes/notification.route';
 import sseRouter from './routes/sse.route';
 import mongoose from 'mongoose';
@@ -20,11 +22,16 @@ import { errorHandler } from './controllers/error.controller';
 import { register, updateProfile } from './controllers/user.controller';
 import { createPost } from './controllers/post.controller';
 import { protect } from './middlewares/auth.middle';
+import { socketProtect } from './middlewares/socket.middle';
+import { ClientEventType } from './interfaces/socket.interface';
+import { onConnection } from './routes/socket.route';
 
 sourceMapSupport.install();
 dotenv.config();
 
 const app = express();
+const server = http.createServer(app);
+export const io = new Server(server);
 
 // Configurations
 app.use(express.json());
@@ -64,7 +71,12 @@ app.use('/api/users', userRouter);
 app.use('/api/posts', postRouter);
 app.use('/api/comments', commentRouter);
 app.use('/api/notifications', notificationRouter);
+app.use('/api/chats', chatRouter);
 app.use('/api/sse', sseRouter);
+
+// Socket.io Part
+io.use(socketProtect);
+io.on(ClientEventType.CONNECTION, onConnection);
 
 app.use(errorHandler);
 
@@ -73,6 +85,6 @@ mongoose.connect(process.env.MONGODB_URL!, { dbName: 'OldWave' }, () => {
 });
 
 const PORT = process.env.SERVER_PORT || 5001;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running in port ${PORT}`);
 });

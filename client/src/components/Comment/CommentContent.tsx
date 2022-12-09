@@ -83,21 +83,19 @@ const CommentContent: FC<CommentContentProp> = ({ comment, onDelete }) => {
             }}
           />
           <Box mt='0.2rem'>
-            <Link
+            <Typography
+              variant='body2'
               display='inline'
-              height='auto'
-              href={`/profile/${commentUser._id}`}
-              sx={{ textDecoration: 'none', color: palette.neutral.dark }}
+              fontSize='0.9rem'
+              onClick={() => navigate(`/profile/${comment.user._id}`)}
+              sx={{
+                color: palette.primary.dark,
+                pt: '0.3rem',
+                '&:hover': { cursor: 'pointer' },
+              }}
             >
-              <Typography
-                variant='body2'
-                display='inline'
-                fontSize='0.9rem'
-                sx={{ color: palette.primary.dark, pt: '0.3rem' }}
-              >
-                {`${commentUser.name}:`}
-              </Typography>
-            </Link>
+              {`${commentUser.name}:`}
+            </Typography>
             <Typography
               variant='body2'
               fontSize='0.9rem'

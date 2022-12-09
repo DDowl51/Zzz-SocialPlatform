@@ -15,6 +15,7 @@ import postSlice, { PostState } from './post.slice';
 import userSlice, { UserState } from './user.slice';
 import friendSlice, { FriendState } from './friend.slice';
 import notificationSlice, { NotificationState } from './notification.slice';
+import chatSlice, { ChatState } from './chat.slice';
 
 // Persist Configuration
 const persistConfig = {
@@ -29,6 +30,7 @@ const combined = combineReducers({
   user: userSlice.reducer,
   friend: friendSlice.reducer,
   notification: notificationSlice.reducer,
+  chat: chatSlice.reducer,
 });
 const persistedReducer = persistReducer(persistConfig, combined);
 
@@ -39,6 +41,7 @@ export interface StateType {
   user: UserState;
   friend: FriendState;
   notification: NotificationState;
+  chat: ChatState;
 }
 
 const store = configureStore({

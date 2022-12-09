@@ -29,6 +29,15 @@ export const getUserById = catchAsync(async (req, res, next) => {
   res.json(user);
 });
 
+export const getUserFriends = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const user = await User.findById(id)
+    .select('-password')
+    .populate('friends', '-password');
+  if (!user) return next(new AppError('User not found.', 404));
+  res.json(user.friends);
+});
+
 export const register = catchAsync(async (req, res) => {
   const { name, email, password, location, occupation, picturePath } = req.body;
 

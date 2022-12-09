@@ -43,8 +43,6 @@ const NavNotification = () => {
   // Fetch notifications from server
   const handleNotifications = useCallback<HandleFn<Notification[]>>(
     data => {
-      console.log(data);
-
       dispatch(notificationActions.setAllNotes({ notifications: data }));
     },
     [dispatch]

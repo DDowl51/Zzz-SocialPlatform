@@ -5,7 +5,7 @@ import { UserType } from 'interfaces/index';
 type MethodType = 'get' | 'post' | 'patch' | 'delete' | 'options';
 type PayloadType = {
   token?: string;
-  data?: Object;
+  data?: any;
 };
 export type LoginResType = {
   user: UserType;
