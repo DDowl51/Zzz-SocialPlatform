@@ -75,6 +75,7 @@ app.use('/api/chats', chatRouter);
 app.use('/api/sse', sseRouter);
 
 // Socket.io Part
+// 设置socket.io的超时时间为10秒
 io.use(socketProtect);
 io.on(ClientEventType.CONNECTION, onConnection);
 

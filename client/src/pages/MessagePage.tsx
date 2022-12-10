@@ -1,12 +1,4 @@
-import {
-  FC,
-  useCallback,
-  useEffect,
-  useState,
-  useMemo,
-  useContext,
-} from 'react';
-import { io } from 'socket.io-client';
+import { FC, useCallback, useEffect, useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Box, IconButton, useMediaQuery } from '@mui/material';
@@ -18,22 +10,70 @@ import UserList from 'components/Message/UserList/UserList';
 import ChatBox from 'components/Message/ChatBox/ChatBox';
 import useHttp, { HandleFn } from 'hooks/useHttp';
 import { chatActions } from 'stores/chat.slice';
+import SocketContext from 'context/socket.context';
 
 const MessagePage: FC = () => {
   const navigate = useNavigate();
   const user = useSelector<StateType, UserType>(state => state.auth.user);
   const [currentChatTarget, setCurrentChatTarget] = useState<UserType>();
-  const [friends, setFriends] = useState<User[]>([]);
+  const [friends, setFriends] = useState<{ isOnline: boolean; info: User }[]>(
+    []
+  );
   const isNonMobileScreens = useMediaQuery('(min-width: 1000px)');
   const dispatch = useDispatch();
 
-  const token = useSelector<StateType, string>(state => state.auth.token);
-  //* Should move to the message page, which token is garanteed not to be null
-  const socket = useMemo(() => io({ auth: { token } }), [token]);
+  const socketCtx = useContext(SocketContext);
+  const socket = socketCtx.socket;
 
   useEffect(() => {
-    if (user) {
+    if (user && socket) {
       socket.emit(ClientEventType.SETNAME, user._id);
+      socket.on(ServerEventType.NAMESET, () => {
+        socket.emit(ClientEventType.GETONLINE);
+        socket.emit(ClientEventType.USERONLINE);
+      });
+      socket.on(ServerEventType.SENDONLINE, (onlineFriends: string[]) => {
+        setFriends(prev => {
+          const newFriends = prev.map(f => {
+            if (onlineFriends.includes(f.info._id)) {
+              return {
+                isOnline: true,
+                info: f.info,
+              };
+            } else {
+              return f;
+            }
+          });
+
+          return newFriends;
+        });
+      });
+      socket.on(ServerEventType.INFORMFRIENDONLINE, friendId => {
+        setFriends(prev => {
+          const newFriends = prev.map(f => {
+            if (f.info._id === friendId) {
+              return { isOnline: true, info: f.info };
+            } else {
+              return f;
+            }
+          });
+
+          return newFriends;
+        });
+      });
+      socket.on(ServerEventType.USEROFFLINE, friendId => {
+        setFriends(prev => {
+          const newFriends = prev.map(f => {
+            if (f.info._id === friendId) {
+              return { isOnline: false, info: f.info };
+            } else {
+              return f;
+            }
+          });
+
+          return newFriends;
+        });
+      });
       socket.on(
         ServerEventType.RECIEVEDMESSAGE,
         (message: string, from: string) => {
@@ -45,24 +85,33 @@ const MessagePage: FC = () => {
                 from,
                 to: user._id,
                 status: 'unread',
-                _id: Math.random().toString(),
+                _id: `${Date.now()}-${user._id}-${Math.random()}`,
               },
             })
           );
         }
       );
     }
+    return () => {
+      if (socket) {
+        socket.emit(ClientEventType.DISCONNECT);
+      }
+    };
   }, [socket, user, dispatch]);
 
   const onSendMessage = useCallback(
     (message: string, to: string) => {
-      socket.emit(ClientEventType.MESSAGE, message, to);
+      if (socket) socket.emit(ClientEventType.MESSAGE, message, to);
     },
     [socket]
   );
 
   const handleFriendsData = useCallback<HandleFn<User[]>>(data => {
-    setFriends(data);
+    const friendsData = data.map((d, i) => ({
+      isOnline: false,
+      info: data[i],
+    }));
+    setFriends(friendsData);
   }, []);
   const { error, makeRequest: fetchFriends } = useHttp(
     `/api/users/${user?._id}/friends`,

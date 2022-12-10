@@ -33,6 +33,7 @@ const App = React.memo(() => {
       }
     };
   }, [sseCtx, token]);
+
   return (
     <ThemeProvider theme={theme}>
       <div className='app'>

@@ -10,6 +10,7 @@ import App from './App';
 import store from './stores/store';
 import ErrorBoundary from 'components/ErrorBoundary';
 import { SseContextProvider } from 'context/sse.context';
+import { SocketContextProvider } from 'context/socket.context';
 
 moment.locale('zh-cn');
 
@@ -22,7 +23,9 @@ root.render(
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistStore(store)}>
           <SseContextProvider>
-            <App />
+            <SocketContextProvider>
+              <App />
+            </SocketContextProvider>
           </SseContextProvider>
         </PersistGate>
       </Provider>

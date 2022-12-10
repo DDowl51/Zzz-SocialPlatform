@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
-import { Avatar, SxProps } from '@mui/material';
+import { Avatar, SxProps, Badge } from '@mui/material';
 import { User } from 'interfaces';
+import StyledBadge from './StyledBadge';
 
 type UserImageProps = {
   user: User;

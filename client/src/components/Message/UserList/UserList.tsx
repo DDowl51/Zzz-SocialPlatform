@@ -4,7 +4,7 @@ import React, { FC } from 'react';
 import UserChat from './UserChat';
 
 type UserListProp = {
-  friends: User[];
+  friends: { isOnline: boolean; info: User }[];
   activeUser: UserType;
   onSwitch: (user: User) => void;
 };
@@ -14,9 +14,10 @@ const UserList: FC<UserListProp> = ({ friends, activeUser, onSwitch }) => {
     <WidgetWrapper>
       {friends.map(f => (
         <UserChat
-          key={f._id}
-          user={f}
-          isActive={f._id === activeUser?._id}
+          key={f.info._id}
+          user={f.info}
+          isOnline={f.isOnline}
+          isActive={f.info._id === activeUser?._id}
           onSwitch={onSwitch}
         />
       ))}
