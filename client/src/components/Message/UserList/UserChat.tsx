@@ -21,6 +21,10 @@ const UserChat: FC<UserProp> = ({
 }) => {
   const loggedUser = useSelector<StateType, User>(state => state.auth.user!);
 
+  const unreadCount = useSelector<StateType, number>(
+    state => state.chat[user._id]?.unreadCount || 0
+  );
+
   const { palette } = useTheme();
   const activeStyle = useMemo(
     () =>
@@ -66,6 +70,19 @@ const UserChat: FC<UserProp> = ({
           <Skeleton width='3rem' />
         )}
       </Box>
+      {unreadCount !== 0 && (
+        <div
+          style={{
+            textAlign: 'right',
+            alignSelf: 'center',
+            backgroundColor: '#ee4444',
+            width: '6px',
+            height: '6px',
+            borderRadius: '50%',
+            marginLeft: '0.5rem',
+          }}
+        ></div>
+      )}
     </Card>
   );
 };

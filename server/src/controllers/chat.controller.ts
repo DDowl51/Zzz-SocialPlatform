@@ -35,10 +35,8 @@ export const markMessageRead = catchAsync(async (req, res, next) => {
   const userId = req.body.userId || req.params.userIdFromToken;
   const targetId = req.params.id;
   const chats = await Chat.find({
-    $or: [
-      { from: userId, to: targetId },
-      { from: targetId, to: userId },
-    ],
+    from: targetId,
+    to: userId,
   });
 
   chats.forEach(async c => {

@@ -13,5 +13,6 @@ export const onConnection = (socket: Socket) => {
   socket.on(ClientEventType.TYPINGEND, userSocket.onTypingEnd);
   socket.on(ClientEventType.USERONLINE, userSocket.onInformFriends);
   socket.on(ClientEventType.GETONLINE, userSocket.onGetOnline);
+  socket.on(ClientEventType.MESSAGEREAD, userSocket.onMessageRead);
   socket.on(ClientEventType.DISCONNECT, userSocket.onDisconnect);
 };

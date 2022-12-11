@@ -8,6 +8,7 @@ export enum ClientEventType {
   TYPING = 'typing',
   TYPINGEND = 'typing_end',
   USERONLINE = 'user_online',
+  MESSAGEREAD = 'message_read',
 }
 
 export enum ServerEventType {
@@ -20,4 +21,5 @@ export enum ServerEventType {
   INFORMFRIENDONLINE = 'inform_friend_online',
   NAMESET = 'name_set',
   USEROFFLINE = 'user_offline',
+  MESSAGEREAD = 'message_read',
 }

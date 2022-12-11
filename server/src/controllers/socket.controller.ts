@@ -95,6 +95,14 @@ export class UserSocket {
     }
   };
 
+  onMessageRead = (targetId: string) => {
+    if (userIdSocketMap.has(targetId)) {
+      userIdSocketMap
+        .get(targetId)
+        ?.emit(ServerEventType.MESSAGEREAD, this.currentUserId);
+    }
+  };
+
   onDisconnect = () => {
     userIdSocketMap.delete(this.currentUserId);
     this.onlineFriends.forEach(f => {

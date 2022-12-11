@@ -1,8 +1,8 @@
-import { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, useMemo } from 'react';
 import {
   IconButton,
   Button,
-  InputBase,
+  Badge,
   Typography,
   Select,
   MenuItem,
@@ -26,16 +26,25 @@ import { authActions } from 'stores/auth.slice';
 import { UserType } from 'interfaces/index';
 import NavNotification from './NavNotification';
 import { useNavigate } from 'react-router-dom';
+import { ChatState } from 'stores/chat.slice';
+import { logoutAction } from 'stores/auth.action';
 
 interface NavItemProps {
   isMobile?: boolean;
 }
 
 const NavItem: FC<PropsWithChildren<NavItemProps>> = ({ isMobile }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
   const navigate = useNavigate();
   const user = useSelector<StateType, UserType | undefined>(
     state => state.auth.user
+  );
+
+  const chatObj = useSelector<StateType, ChatState>(state => state.chat);
+
+  const hasUnread = useMemo(
+    () => Object.values(chatObj).reduce((acc, c) => acc + c.unreadCount, 0),
+    [chatObj]
   );
 
   const theme = useTheme();
@@ -58,7 +67,9 @@ const NavItem: FC<PropsWithChildren<NavItemProps>> = ({ isMobile }) => {
         )}
       </IconButton>
       <IconButton onClick={() => navigate('/message')}>
-        <Message sx={{ fontSize: '25px' }} />
+        <Badge badgeContent={hasUnread} color='primary' variant='dot'>
+          <Message sx={{ fontSize: '25px' }} />{' '}
+        </Badge>
       </IconButton>
       <NavNotification />
       <Tooltip title='Not implemented yet'>
@@ -68,7 +79,7 @@ const NavItem: FC<PropsWithChildren<NavItemProps>> = ({ isMobile }) => {
       </Tooltip>
       <Button
         sx={{ color: palette.primary.dark }}
-        onClick={() => dispatch(authActions.logout())}
+        onClick={() => dispatch(logoutAction)}
       >
         <Typography pr='0.5rem'>{username}</Typography>
         <Logout sx={{ fontSize: '25px' }} />

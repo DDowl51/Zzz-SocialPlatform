@@ -1,12 +1,15 @@
 import { Box, Card, Typography, useTheme } from '@mui/material';
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
+import CheckIcon from '@mui/icons-material/Check';
 import UserImage from 'components/UserImage';
 import { User } from 'interfaces';
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 type ChatBubbleProp = {
   user: User;
   targetUser: User;
   message: string;
+  isRead?: boolean;
   isSender?: boolean;
 };
 
@@ -15,6 +18,7 @@ const ChatBubble: FC<ChatBubbleProp> = ({
   targetUser,
   message,
   isSender = false,
+  isRead = false,
 }) => {
   const { palette } = useTheme();
   return (
@@ -27,6 +31,20 @@ const ChatBubble: FC<ChatBubbleProp> = ({
           position='relative'
           mb='0.5rem'
         >
+          {isRead ? (
+            <CheckIcon
+              sx={{
+                alignSelf: 'end',
+                fontSize: '0.75rem',
+                color: palette.neutral.medium,
+              }}
+            />
+          ) : (
+            <KeyboardReturnIcon
+              sx={{ alignSelf: 'end', fontSize: '0.75rem' }}
+            />
+          )}
+
           <Card>
             <Typography p='0.75rem' bgcolor={palette.background.paper}>
               {message}

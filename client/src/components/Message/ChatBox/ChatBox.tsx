@@ -15,6 +15,8 @@ import {
   Box,
   useTheme,
   Divider,
+  useMediaQuery,
+  IconButton,
 } from '@mui/material';
 import ChatBubble from './ChatBubble';
 import { useSelector, useDispatch } from 'react-redux';
@@ -28,19 +30,24 @@ import {
 } from 'interfaces';
 import FlexBetween from 'components/FlexBetween';
 import { chatActions } from 'stores/chat.slice';
-import useHttp, { HandleFn } from 'hooks/useHttp';
+import useHttp from 'hooks/useHttp';
 import SocketContext from 'context/socket.context';
+import { messageRead } from 'stores/chat.action';
+import moment from 'moment';
+import { ArrowBack } from '@mui/icons-material';
 
 type ChatBoxProp = {
   activeTarget?: User;
+  onBack?: () => void;
   onSendMessage: (message: string, to: string) => void;
 };
 
 const ChatBox: FC<ChatBoxProp> = React.memo(
-  ({ activeTarget, onSendMessage }) => {
-    const dispatch = useDispatch();
+  ({ activeTarget, onSendMessage, onBack = () => {} }) => {
+    const dispatch = useDispatch<any>();
     const [input, setInput] = React.useState('');
     const { palette } = useTheme();
+    const isNonMobileScreens = useMediaQuery('(min-width: 1000px)');
 
     const chatBoxEl = useRef<HTMLDivElement | null>();
 
@@ -51,14 +58,6 @@ const ChatBox: FC<ChatBoxProp> = React.memo(
     const user = useSelector<StateType, UserType>(state => state.auth.user);
     const messages = useSelector<StateType, Chat[]>(
       state => state.chat[(activeTarget && activeTarget._id) || '']?.chats || []
-    );
-    const unreadCount = useSelector<StateType, number>(
-      state =>
-        state.chat[(activeTarget && activeTarget._id) || '']?.unreadCount || 0
-    );
-    const fetched = useSelector<StateType, boolean>(
-      state =>
-        state.chat[(activeTarget && activeTarget._id) || '']?.fetched || false
     );
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,6 +88,7 @@ const ChatBox: FC<ChatBoxProp> = React.memo(
         from: user._id,
         to: activeTarget._id,
         content: input,
+        createdAt: new Date(Date.now()).toISOString(),
       };
 
       // Send message
@@ -98,31 +98,11 @@ const ChatBox: FC<ChatBoxProp> = React.memo(
       sendMessage({ token, data: { content: chatObj.content } });
       onSendMessage(input, activeTarget._id);
 
+      dispatch(messageRead(activeTarget._id));
+      socket?.emit(ClientEventType.MESSAGEREAD, activeTarget._id);
+
       setInput('');
     };
-
-    const setChatMessages = useCallback<HandleFn<Chat[]>>(
-      data => {
-        dispatch(
-          chatActions.setMessages({ userId: activeTarget?._id, messages: data })
-        );
-        dispatch(chatActions.setFetched({ userId: activeTarget?._id }));
-      },
-      [dispatch, activeTarget]
-    );
-
-    const { makeRequest: fetchMessage } = useHttp(
-      `/api/chats/${activeTarget?._id}`,
-      setChatMessages,
-      'get'
-    );
-
-    useEffect(() => {
-      if (error) throw error;
-      if (activeTarget && !fetched) {
-        fetchMessage({ token });
-      }
-    }, [error, fetchMessage, activeTarget, fetched, token]);
 
     useEffect(() => {
       setInput('');
@@ -187,6 +167,11 @@ const ChatBox: FC<ChatBoxProp> = React.memo(
         }}
       >
         <Box p='1rem'>
+          {!isNonMobileScreens && (
+            <IconButton onClick={onBack}>
+              <ArrowBack />
+            </IconButton>
+          )}
           <Typography fontSize='1.4rem' pr='1rem' variant='body2'>
             {activeTarget.name}
           </Typography>
@@ -205,15 +190,43 @@ const ChatBox: FC<ChatBoxProp> = React.memo(
           sx={{ overflowY: 'scroll' }}
           ref={chatBoxEl}
         >
-          {messages.map((message, i) => (
-            <ChatBubble
-              key={message._id}
-              targetUser={activeTarget}
-              user={user!}
-              message={message.content}
-              isSender={message.from === user?._id}
-            />
-          ))}
+          {messages.map((m, i, ms) => {
+            return (
+              <div key={m._id}>
+                {i === 0 ? (
+                  <Typography
+                    fontSize='0.5rem'
+                    sx={{ color: palette.neutral.dark }}
+                    textAlign='center'
+                  >
+                    {new Date(m.createdAt).toLocaleString()}
+                  </Typography>
+                ) : (
+                  moment(m.createdAt).diff(
+                    moment(ms[i - 1].createdAt),
+                    'minutes',
+                    true
+                  ) >= 20 && (
+                    <Typography
+                      fontSize='0.5rem'
+                      sx={{ color: palette.neutral.dark }}
+                      mt='1rem'
+                      textAlign='center'
+                    >
+                      {new Date(m.createdAt).toLocaleString()}
+                    </Typography>
+                  )
+                )}
+                <ChatBubble
+                  targetUser={activeTarget}
+                  user={user!}
+                  isRead={m.status === 'read'}
+                  message={m.content}
+                  isSender={m.from === user?._id}
+                />
+              </div>
+            );
+          })}
         </Box>
         <FlexBetween sx={{ justifySelf: 'end' }}>
           <TextField

@@ -39,3 +39,7 @@ body {
 * {
   transition: background-color 0.2s;
 }
+
+.MuiSnackbar-anchorOriginTopRight {
+  top: 4rem !important;
+}

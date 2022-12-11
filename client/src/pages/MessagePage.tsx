@@ -11,6 +11,7 @@ import ChatBox from 'components/Message/ChatBox/ChatBox';
 import useHttp, { HandleFn } from 'hooks/useHttp';
 import { chatActions } from 'stores/chat.slice';
 import SocketContext from 'context/socket.context';
+import { fetchAllMessages, messageRead } from 'stores/chat.action';
 
 const MessagePage: FC = () => {
   const navigate = useNavigate();
@@ -20,18 +21,13 @@ const MessagePage: FC = () => {
     []
   );
   const isNonMobileScreens = useMediaQuery('(min-width: 1000px)');
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
 
   const socketCtx = useContext(SocketContext);
   const socket = socketCtx.socket;
 
   useEffect(() => {
     if (user && socket) {
-      socket.emit(ClientEventType.SETNAME, user._id);
-      socket.on(ServerEventType.NAMESET, () => {
-        socket.emit(ClientEventType.GETONLINE);
-        socket.emit(ClientEventType.USERONLINE);
-      });
       socket.on(ServerEventType.SENDONLINE, (onlineFriends: string[]) => {
         setFriends(prev => {
           const newFriends = prev.map(f => {
@@ -74,29 +70,7 @@ const MessagePage: FC = () => {
           return newFriends;
         });
       });
-      socket.on(
-        ServerEventType.RECIEVEDMESSAGE,
-        (message: string, from: string) => {
-          dispatch(
-            chatActions.addMessage({
-              userId: from,
-              message: {
-                content: message,
-                from,
-                to: user._id,
-                status: 'unread',
-                _id: `${Date.now()}-${user._id}-${Math.random()}`,
-              },
-            })
-          );
-        }
-      );
     }
-    return () => {
-      if (socket) {
-        socket.emit(ClientEventType.DISCONNECT);
-      }
-    };
   }, [socket, user, dispatch]);
 
   const onSendMessage = useCallback(
@@ -121,14 +95,41 @@ const MessagePage: FC = () => {
 
   useEffect(() => {
     if (friends.length === 0) fetchFriends({});
+
     if (!user) navigate('/login');
     if (error) throw error;
-  }, [user, navigate, friends, error, fetchFriends]);
+  }, [user, navigate, friends, error, fetchFriends, dispatch]);
+
+  if (!isNonMobileScreens) {
+    return (
+      <>
+        <Box mt='1rem'></Box>
+        {currentChatTarget ? (
+          <ChatBox
+            onBack={() => setCurrentChatTarget(undefined)}
+            onSendMessage={onSendMessage}
+            activeTarget={currentChatTarget}
+          />
+        ) : (
+          <UserList
+            friends={friends}
+            activeUser={currentChatTarget}
+            onSwitch={user => {
+              setCurrentChatTarget(user);
+              dispatch(messageRead(user._id));
+              socket?.emit(ClientEventType.MESSAGEREAD, user._id);
+            }}
+          />
+        )}
+      </>
+    );
+  }
 
   return (
     <>
       <IconButton
         sx={{ ml: isNonMobileScreens ? '12rem' : '2rem', mt: '1rem' }}
+        onClick={() => navigate(-1)}
       >
         <ArrowBack />
       </IconButton>
@@ -143,7 +144,11 @@ const MessagePage: FC = () => {
           <UserList
             friends={friends}
             activeUser={currentChatTarget}
-            onSwitch={user => setCurrentChatTarget(user)}
+            onSwitch={user => {
+              setCurrentChatTarget(user);
+              dispatch(messageRead(user._id));
+              socket?.emit(ClientEventType.MESSAGEREAD, user._id);
+            }}
           />
           <Box m='2rem 0' />
         </Box>

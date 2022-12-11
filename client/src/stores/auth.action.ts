@@ -2,6 +2,7 @@ import { ThunkAction } from '@reduxjs/toolkit';
 import { StateType } from './store';
 import { authActions } from 'stores/auth.slice';
 import axios from 'axios';
+import { chatActions } from './chat.slice';
 
 export const logoutAction: ThunkAction<
   Promise<void>,
@@ -14,4 +15,5 @@ export const logoutAction: ThunkAction<
   await axios.delete('/api/sse', {
     headers: { authorization: `Bearer ${token}` },
   });
+  dispatch(chatActions.clearChat());
 };
