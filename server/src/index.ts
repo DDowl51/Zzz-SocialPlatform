@@ -74,6 +74,19 @@ app.use('/api/notifications', notificationRouter);
 app.use('/api/chats', chatRouter);
 app.use('/api/sse', sseRouter);
 
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../../client/build')));
+  app.get('*', (req, res) => {
+    res.sendFile(
+      path.resolve(__dirname, '..', '..', 'client', 'build', 'index.html')
+    );
+  });
+} else {
+  app.get('/', (req, res) => {
+    res.send('API is running...');
+  });
+}
+
 // Socket.io Part
 // 设置socket.io的超时时间为10秒
 io.use(socketProtect);
