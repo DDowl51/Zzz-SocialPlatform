@@ -26,6 +26,16 @@ export const getAllPosts = catchAsync(async (req, res, next) => {
   res.json(posts);
 });
 
+export const getPostById = catchAsync(async (req, res, next) => {
+  const { postId } = req.params;
+
+  const post = await Post.findById(postId).populate('user', '-password');
+
+  if (!post) return next(new AppError('Post not found', 404));
+
+  res.json(post);
+});
+
 export const getUserPosts = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
@@ -49,12 +59,13 @@ export const getUserPosts = catchAsync(async (req, res, next) => {
 // Protected
 export const createPost = catchAsync(
   async (req: ICreatePostRequest, res, next) => {
-    const { userId, description, picturePath } = req.body;
+    const { userId, description, picturePath, audioPath } = req.body;
 
     const newPost = new Post({
       user: userId,
       description,
-      picturePath: picturePath,
+      picturePath,
+      audioPath,
     });
 
     const savedPost = await newPost.save();
@@ -119,4 +130,14 @@ export const deletePost = catchAsync(async (req, res, next) => {
   await post.remove();
   await user.save();
   res.status(204).json();
+});
+
+export const searchPosts = catchAsync(async (req, res, next) => {
+  const { pattern } = req.params;
+
+  const posts = await Post.find({
+    description: { $regex: pattern, $options: 'i' },
+  }).populate('user', '-password');
+
+  res.json(posts);
 });

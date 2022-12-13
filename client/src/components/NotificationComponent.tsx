@@ -45,7 +45,7 @@ const NotificatioComponent: FC<NotificatioComponentProp> = ({
             notification.type === 'like' ? 'liked' : 'commented'
           } `}</Typography>
           <Typography
-            onClick={() => navigate(`/post/${notification.targetPost}`)}
+            onClick={() => navigate(`/posts/${notification.targetPost}`)}
             variant='body2'
             fontSize='0.9rem'
             sx={{

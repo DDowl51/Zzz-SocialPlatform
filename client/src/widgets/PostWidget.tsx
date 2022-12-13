@@ -6,11 +6,11 @@ import {
   ShareOutlined,
 } from '@mui/icons-material';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import copy from 'copy-to-clipboard';
 import {
-  Link,
+  Snackbar,
   Box,
   IconButton,
-  Tooltip,
   Typography,
   useTheme,
   Popover,
@@ -26,17 +26,18 @@ import useHttp, { HandleFn } from 'hooks/useHttp';
 import { postActions } from 'stores/post.slice';
 import CommentComponent from '../components/Comment/CommentComponent';
 import UserImage from 'components/UserImage';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
 import { getDate } from 'utils/getDate';
 
 type PostProp = {
   post: Post;
+  commentMode?: boolean;
 };
 
-const PostWidget: FC<PostProp> = ({ post }) => {
+const PostWidget: FC<PostProp> = ({ post, commentMode = false }) => {
   const navigate = useNavigate();
-  const [isComment, setIsComment] = useState(false);
+  const [isComment, setIsComment] = useState(commentMode);
   const dispatch = useDispatch();
   const token = useSelector<StateType, string>(state => state.auth.token);
   const user = useSelector<StateType, UserType>(state => state.auth.user);
@@ -44,6 +45,11 @@ const PostWidget: FC<PostProp> = ({ post }) => {
 
   const [isLiked, setIsLiked] = useState(Boolean(post.likes[loggedInUserId]));
   const isAuthor = loggedInUserId === post.user._id;
+
+  const [copyOpen, setCopyOpen] = useState(false);
+  const handleCopyClose = () => {
+    setCopyOpen(false);
+  };
 
   const { palette } = useTheme();
   const main = palette.neutral.main;
@@ -180,6 +186,14 @@ const PostWidget: FC<PostProp> = ({ post }) => {
       <Typography color={main} sx={{ mt: '1rem' }}>
         {post.description}
       </Typography>
+      {post.audioPath && (
+        <audio
+          src={`/assets/${post.audioPath}`}
+          controls
+          playsInline
+          autoPlay
+        />
+      )}
       {post.picturePath && (
         <img
           width='100%'
@@ -210,11 +224,24 @@ const PostWidget: FC<PostProp> = ({ post }) => {
           </FlexBetween>
         </FlexBetween>
 
-        <Tooltip title='Not implemented yet'>
-          <IconButton>
-            <ShareOutlined />
-          </IconButton>
-        </Tooltip>
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          open={copyOpen}
+          onClose={handleCopyClose}
+          autoHideDuration={3000}
+          message='Link copied!'
+          sx={{ fontSize: '1rem' }}
+        />
+        <IconButton
+          onClick={() => {
+            copy(
+              `${window.location.protocol}//${window.location.host}/posts/${post._id}`
+            );
+            setCopyOpen(true);
+          }}
+        >
+          <ShareOutlined />
+        </IconButton>
       </FlexBetween>
 
       {isComment && <CommentComponent from={post} />}

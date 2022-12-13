@@ -97,7 +97,7 @@ const NavNotification = () => {
                 dispatch(markAllNotesRead());
               }}
             >
-              <Typography fontSize='0.25rem'>Mark all read</Typography>
+              <Typography fontSize='0.5rem'>Mark all read</Typography>
             </Button>
           </Box>
           {notifications.length === 0 ? (

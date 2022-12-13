@@ -1,12 +1,11 @@
-import React, { useEffect, useMemo, useContext, useState } from 'react';
+import React, { useEffect, useMemo, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createTheme } from '@mui/material/styles';
 import {
   ThemeProvider,
   CssBaseline,
   PaletteMode,
-  Snackbar,
-  Alert,
+  Typography,
 } from '@mui/material';
 import { themeSettings } from 'theme';
 import { Routes, Route } from 'react-router-dom';
@@ -25,6 +24,8 @@ import SocketContext from 'context/socket.context';
 import { ClientEventType, ServerEventType, UserType } from 'interfaces';
 import { chatActions } from 'stores/chat.slice';
 import { fetchAllMessages } from 'stores/chat.action';
+import SearchPage from 'pages/SearchPage';
+import PostPage from 'pages/PostPage';
 
 let init = false;
 const App = React.memo(() => {
@@ -63,6 +64,7 @@ const App = React.memo(() => {
                 to: user._id,
                 status: 'unread',
                 _id: `${Date.now()}-${user._id}-${Math.random()}`,
+                createdAt: new Date(Date.now()).toISOString(),
               },
             })
           );
@@ -89,7 +91,8 @@ const App = React.memo(() => {
         sseCtx.disconnect();
       }
     };
-  }, [sseCtx, token]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -104,6 +107,8 @@ const App = React.memo(() => {
             <Route path='/home' element={<HomePage />} />
             <Route path='/message' element={<MessagePage />} />
             <Route path='/profile/:userId' element={<ProfilePage />} />
+            <Route path='/posts/:postId' element={<PostPage />} />
+            <Route path='/search/:pattern' element={<SearchPage />} />
           </Routes>
         </Layout>
       </div>

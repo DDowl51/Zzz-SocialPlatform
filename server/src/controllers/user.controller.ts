@@ -114,3 +114,19 @@ export const handleFriend = catchAsync(
     res.json(savedUser);
   }
 );
+
+export const searchUsers = catchAsync(async (req, res, next) => {
+  const { pattern } = req.params;
+  const regex = { $regex: pattern, $options: 'i' };
+
+  const users = await User.find({
+    $or: [
+      { name: regex },
+      { location: regex },
+      { occupation: regex },
+      { email: regex },
+    ],
+  }).select('-password');
+
+  res.json(users);
+});

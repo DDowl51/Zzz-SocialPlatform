@@ -26,6 +26,7 @@ export interface Post {
   user: User;
   description: string;
   picturePath?: string;
+  audioPath: string;
   likes: { [userId: string]: boolean }; // UserId
   likesCount: number;
   comments: Comment[];

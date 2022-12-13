@@ -7,6 +7,7 @@ import {
   getUserById,
   handleFriend,
   getUserFriends,
+  searchUsers,
 } from '../controllers/user.controller';
 import { getUserPosts } from '../controllers/post.controller';
 
@@ -19,4 +20,5 @@ router.route('/:id').get(getUserById);
 router.get('/:id/posts', getUserPosts);
 router.get('/:id/friends', getUserFriends);
 router.patch('/friends/:friendId', protect, handleFriend);
+router.get('/search/:pattern', searchUsers);
 export default router;

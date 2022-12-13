@@ -9,6 +9,8 @@ import sourceMapSupport from 'source-map-support';
 import multer from 'multer';
 import { Server } from 'socket.io';
 import http from 'http';
+import https from 'https';
+import fs from 'fs';
 
 import authRouter from './routes/auth.route';
 import userRouter from './routes/user.route';
@@ -31,6 +33,7 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
+
 export const io = new Server(server);
 
 // Configurations
@@ -42,6 +45,12 @@ app.use(bodyParser.json({ limit: '30mb' }));
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: false }));
 app.use(cors());
 app.use('/assets', express.static(path.join(__dirname, '../public/assets')));
+
+app.use((req, res, next) => {
+  res.setHeader('Origin-Agent-Cluster', '?0');
+
+  next();
+});
 
 // File storage
 const storage = multer.diskStorage({
@@ -57,7 +66,15 @@ const upload = multer({ storage });
 
 // Routes with files
 app.post('/api/auth/register', upload.single('picture'), register);
-app.post('/api/posts', upload.single('picture'), protect, createPost);
+app.post(
+  '/api/posts',
+  upload.fields([
+    { name: 'picture', maxCount: 1 },
+    { name: 'audio', maxCount: 1 },
+  ]),
+  protect,
+  createPost
+);
 app.patch(
   '/api/users/update',
   protect,
@@ -75,9 +92,9 @@ app.use('/api/chats', chatRouter);
 app.use('/api/sse', sseRouter);
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '/client/build')));
+  app.use(express.static(path.join(__dirname, '../client')));
   app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    res.sendFile(path.resolve(__dirname, '..', 'client', 'index.html'));
   });
 } else {
   app.get('/', (req, res) => {

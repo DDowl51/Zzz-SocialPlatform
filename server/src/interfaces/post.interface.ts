@@ -6,6 +6,7 @@ export interface IPost {
   user: ObjectId;
   description: string;
   picturePath?: string;
+  audioPath?: string;
   likes: mongoose.Types.Map<boolean>;
   likesCount: number;
   comments: ObjectId[];

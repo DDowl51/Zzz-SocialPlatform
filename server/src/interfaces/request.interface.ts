@@ -24,6 +24,7 @@ export interface ILoginRequest extends Request {
 interface ICreatePostBody extends ILoggedBody {
   description: string;
   picturePath?: string;
+  audioPath?: string;
 }
 
 export interface ICreatePostRequest extends Request {

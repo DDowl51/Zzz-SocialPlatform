@@ -11,9 +11,7 @@ import store from './stores/store';
 import ErrorBoundary from 'components/ErrorBoundary';
 import { SseContextProvider } from 'context/sse.context';
 import { SocketContextProvider } from 'context/socket.context';
-
 moment.locale('zh-cn');
-
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

@@ -7,8 +7,10 @@ import {
   createPost,
   deletePost,
   getAllPosts,
+  getPostById,
   getUserPosts,
   likePost,
+  searchPosts,
 } from '../controllers/post.controller';
 import { protect } from '../middlewares/auth.middle';
 import { notify } from '../middlewares/notification.middle';
@@ -17,8 +19,9 @@ import { notify } from '../middlewares/notification.middle';
 const router = express.Router();
 
 router.route('/').get(getAllPosts);
-router.delete('/:postId', protect, deletePost);
+router.route('/:postId').delete(protect, deletePost).get(getPostById);
 router.patch('/:postId/like', protect, notify('like'), likePost);
+router.get('/search/:pattern', searchPosts);
 
 router
   .route('/:postId/comments')

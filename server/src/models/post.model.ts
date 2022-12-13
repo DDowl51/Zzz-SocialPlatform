@@ -13,6 +13,7 @@ const postSchema = new mongoose.Schema<IPost>(
       required: true,
     },
     picturePath: String,
+    audioPath: String,
     likes: {
       type: Map,
       of: Boolean,
