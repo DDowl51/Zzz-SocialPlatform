@@ -40,8 +40,8 @@ const HomePage: FC = () => {
         // position={isNonMobileScreens ? 'fixed' : 'inherit'}
       >
         <UserWidget user={user} />
-        <Box m='2rem 0' />
-        <DebugWidget />
+        {/* <Box m='2rem 0' />
+        <DebugWidget /> */}
       </Box>
       <Box
         flexBasis={isNonMobileScreens ? '42%' : undefined}

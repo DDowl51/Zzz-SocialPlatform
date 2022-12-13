@@ -55,9 +55,8 @@ const MyPostWidget = () => {
   } = useReactMediaRecorder({
     audio: true,
     video: false,
-    blobPropertyBag: {
-      type: 'audio/wav',
-    },
+    // blobPropertyBag: { type: 'audio/aac' },
+    mediaRecorderOptions: { mimeType: 'audio/wav' },
     onStop(blobUrl, blob) {
       setAudio(
         new File([blob], `${user._id}-${Date.now().toString(16)}-audio.wav`)
@@ -226,8 +225,8 @@ const MyPostWidget = () => {
       {inputMode === 'Attach' && 'AttachMode'}
       {inputMode === 'Audio' && (
         <>
-          <Typography>{status}</Typography>
-          <Typography>{errorRecord}</Typography>
+          {/* <Typography>{status}</Typography>
+          <Typography>{errorRecord}</Typography> */}
           <ToggleButtonGroup>
             <ToggleButton
               value='start'

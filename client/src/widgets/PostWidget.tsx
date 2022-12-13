@@ -186,14 +186,7 @@ const PostWidget: FC<PostProp> = ({ post, commentMode = false }) => {
       <Typography color={main} sx={{ mt: '1rem' }}>
         {post.description}
       </Typography>
-      {post.audioPath && (
-        <audio
-          src={`/assets/${post.audioPath}`}
-          controls
-          playsInline
-          autoPlay
-        />
-      )}
+      {post.audioPath && <audio src={`/assets/${post.audioPath}`} controls />}
       {post.picturePath && (
         <img
           width='100%'
